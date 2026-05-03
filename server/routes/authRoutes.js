@@ -27,9 +27,13 @@ function createPkcePair() {
 }
 
 let jwksRef = null;
+function issuerBase() {
+  return `${OIDC_ISSUER.replace(/\/+$/, '')}/`;
+}
+
 function getJwks() {
   if (!jwksRef) {
-    jwksRef = createRemoteJWKSet(new URL(`${OIDC_ISSUER}/jwks`));
+    jwksRef = createRemoteJWKSet(new URL('jwks', issuerBase()));
   }
   return jwksRef;
 }
@@ -53,10 +57,11 @@ router.get('/login', (req, res, next) => {
     code_challenge: codeChallenge,
     code_challenge_method: 'S256',
   });
-  const authorizeUrl = `${OIDC_ISSUER}/auth?${params.toString()}`;
+  const authorizeUrl = new URL('auth', issuerBase());
+  authorizeUrl.search = params.toString();
   req.session.save((err) => {
     if (err) return next(err);
-    res.redirect(authorizeUrl);
+    res.redirect(authorizeUrl.href);
   });
 });
 
@@ -121,7 +126,7 @@ router.get('/callback', async (req, res) => {
     code_verifier: codeVerifier,
   });
 
-  const tokenRes = await fetch(`${OIDC_ISSUER}/token`, {
+  const tokenRes = await fetch(new URL('token', issuerBase()), {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body,
