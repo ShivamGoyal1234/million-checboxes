@@ -1,10 +1,9 @@
 # Production stack: Node app (Dockerfile) + Redis with persistence.
 #
-#   cp .env.docker.example .env   # then set SESSION_SECRET, OIDC_*, REDIRECT_URI, etc.
+#   cp .env.docker.example .env   # fill production secrets and URLs
 #   docker compose -f docker-compose.prod.yml up -d --build
 #
-# App listens on 3000 in the container. Host bind defaults to 127.0.0.1:HOST_PORT
-# (set HOST_PORT in `.env`; e.g. 3012 if nginx proxies to 127.0.0.1:3012).
+# Published as 127.0.0.1:3012 -> container :3000 (match host nginx proxy_pass).
 
 services:
   redis:

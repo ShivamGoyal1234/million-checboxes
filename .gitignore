@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Environment and secrets (templates like .env*.example stay tracked)
+.env
+.env.local
+.env.*.local
+
+# Logs and debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor / IDE (uncomment if you do not want these in the repo)
+# .idea/
+# .vscode/
+
+# Test / coverage
+coverage/
+.nyc_output/
+
+# Optional build output
+dist/
+build/
