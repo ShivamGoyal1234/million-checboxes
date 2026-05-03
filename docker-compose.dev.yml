@@ -1,0 +1,16 @@
+# Live-reload development: bind-mount source into the container so edits apply without rebuilding.
+# Server files trigger process restart via `node --watch`; static files in public/ update on browser refresh.
+#
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+#   npm run docker:dev
+#
+# After changing package.json dependencies, rebuild once: docker compose ... build --no-cache app
+
+services:
+  app:
+    volumes:
+      - ./server:/app/server
+      - ./public:/app/public
+    command: node --watch server/index.js
+    environment:
+      NODE_ENV: development

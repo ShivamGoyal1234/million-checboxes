@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Million Checkboxes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="brand">
+      <span class="brand-title">Million Checkboxes</span>
+      <span class="brand-sub">real-time · Redis · OIDC</span>
+    </div>
+    <div class="header-actions">
+      <span id="ws-status" class="pill pill-warn">connecting…</span>
+      <span id="conn-count" class="pill">users: —</span>
+      <div id="auth-area"></div>
+    </div>
+  </header>
+
+  <section class="stats-bar">
+    <div class="stat"><span class="label">Checked</span> <span id="checked-count">—</span></div>
+    <div class="stat"><span class="label">Total cells</span> <span id="total-count">—</span></div>
+    <div class="stat"><span class="label">You</span> <span id="role-label">anonymous (read-only)</span></div>
+  </section>
+
+  <div class="grid-shell">
+    <div class="grid-meta">
+      <span id="view-hint">Scroll to pan · click to toggle (when logged in)</span>
+    </div>
+    <div class="canvas-wrap" id="canvas-wrap">
+      <canvas id="grid" width="900" height="520" aria-label="Checkbox grid"></canvas>
+    </div>
+  </div>
+
+  <div id="toast-root" class="toast-root" aria-live="polite"></div>
+
+  <script src="/app.js" type="module"></script>
+</body>
+</html>

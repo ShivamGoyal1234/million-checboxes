@@ -1,0 +1,51 @@
+# Production stack: Node app (Dockerfile) + Redis with persistence.
+#
+#   cp .env.docker.example .env   # then set SESSION_SECRET, OIDC_*, REDIRECT_URI, etc.
+#   docker compose -f docker-compose.prod.yml up -d --build
+#
+# App listens on 3000 in the container. Host bind defaults to 127.0.0.1:HOST_PORT
+# (set HOST_PORT in `.env`; e.g. 3012 if nginx proxies to 127.0.0.1:3012).
+
+services:
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      redis:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "127.0.0.1:3012:3000"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:'+(process.env.PORT||3000)+'/api/stats').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  redis-data:
